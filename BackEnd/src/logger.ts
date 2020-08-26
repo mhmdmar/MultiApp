@@ -21,10 +21,13 @@ class Logger {
             case "trace":
                 level = 5;
                 break;
+            case "none":
+                level = 6;
+                break;
             default:
-                level = 0;
+                level = 6;
                 console.error(
-                    "logLevel should be one of the options [debug, info, warn, error, trace]"
+                    "logLevel should be one of the options [none, debug, info, warn, error, trace], with unknown logLevel the logger will not work"
                 );
         }
         return level;

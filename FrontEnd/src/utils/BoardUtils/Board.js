@@ -4,7 +4,7 @@ import StorageService from "@/services/StorageService";
 import Note from "@/utils/BoardUtils/Note";
 let mockService = process.env.NODE_ENV !== "production";
 let storage = new DataService();
-if (!mockService) {
+if (mockService) {
     storage = StorageService;
 }
 

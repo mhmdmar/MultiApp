@@ -5,14 +5,15 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.setGlobalPrefix("api");
     app.enableCors();
-    logger.setLogLevel("debug");
+    const debug = process.env.NODE_ENV === "development";
+    logger.setLogLevel(debug ? "debug" : "none");
     await app.listen(3000);
 }
 
 bootstrap()
     .then(() => {
-        console.log("App started");
+        logger.debug("App started");
     })
     .catch(e => {
-        console.log("Error - ", e);
+        logger.error("App error - ", e);
     });
