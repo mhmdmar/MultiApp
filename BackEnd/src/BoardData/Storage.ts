@@ -1,4 +1,5 @@
-import {readFileSync, writeFileSync, existsSync} from "fs";
+import {readFileSync, writeFileSync, existsSync, mkdirSync} from "fs";
+import * as path from "path";
 import logger from "../logger";
 
 class Storage {
@@ -6,17 +7,28 @@ class Storage {
     constructor(dataFilePath: string) {
         this.dataFilePath = dataFilePath;
     }
+    createDirectory(filePath: string): void {
+        const dirname = path.dirname(filePath);
+        console.log(dirname);
+        if (!existsSync(dirname)) {
+            this.createDirectory(dirname);
+            mkdirSync(dirname);
+        }
+    }
     readDataFile(): string {
         let data = `{"notes": []}`;
         try {
             if (existsSync(this.dataFilePath)) {
+                console.log("A");
                 data = readFileSync(this.dataFilePath, "utf8");
+            } else {
+                logger.error("Data file doesn't exist");
+                this.createDirectory(this.dataFilePath);
+                writeFileSync(this.dataFilePath, data);
             }
         } catch (err) {
-            logger.error("Data file doesn't exist");
-            writeFileSync(this.dataFilePath, data);
+            logger.error(err);
         }
-        console.log(data);
         return data;
     }
     getDataFromStorage(): any {
