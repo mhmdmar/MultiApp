@@ -9,7 +9,6 @@ class Storage {
     }
     createDirectory(filePath: string): void {
         const dirname = path.dirname(filePath);
-        console.log(dirname);
         if (!existsSync(dirname)) {
             this.createDirectory(dirname);
             mkdirSync(dirname);
@@ -19,7 +18,6 @@ class Storage {
         let data = `{"notes": []}`;
         try {
             if (existsSync(this.dataFilePath)) {
-                console.log("A");
                 data = readFileSync(this.dataFilePath, "utf8");
             } else {
                 logger.error("Data file doesn't exist");
@@ -36,7 +34,7 @@ class Storage {
         try {
             data = JSON.parse(this.readDataFile());
         } catch (err) {
-            console.log("Corrupted JSON file in ", this.dataFilePath);
+            logger.error("Corrupted JSON file in ", this.dataFilePath);
         }
         if (!data) {
             data = this.reset();

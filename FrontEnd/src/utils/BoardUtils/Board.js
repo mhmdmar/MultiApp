@@ -40,7 +40,7 @@ class Board {
     }
     save() {
         storage.saveToStorage(this.notes, this.categories).catch(() => {
-            console.log("SAVE ISSUE");
+            console.error("SAVE ISSUE");
         });
     }
 }
