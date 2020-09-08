@@ -1,7 +1,14 @@
 <template>
-    <div class="note-container" v-show="visible" :class="{'edit-mode': editMode}">
+    <div
+        class="note-container"
+        v-show="visible"
+        :class="{'edit-mode': editMode}"
+        v-keyboardShortcut="{
+            shortcutsArray: getKeyboardShortcuts()
+        }"
+    >
         <div class="top-toolbar">
-            <div class="top-toolbar-buttons" v-if="!editMode">
+            <div class="top-note-toolbar-buttons" v-if="!editMode">
                 <SVGIcon icon_name="Edit" :onClickCB="editNote"></SVGIcon>
                 <SVGIcon
                     icon_name="Hint"
@@ -52,9 +59,14 @@
 <script>
     import SVGIcon from "@/components/SVGIcon";
     import {mapGetters, mapMutations} from "vuex";
+    import keyboardShortcut from "@/directives/keyboardShortcut";
+    import keyboardKeys from "@/utils/keyboardKeys.json";
     export default {
         name: "Note",
         props: ["note"],
+        directives: {
+            keyboardShortcut
+        },
         components: {SVGIcon},
         data() {
             return {
@@ -122,6 +134,46 @@
             },
             confirmDelete() {
                 this.$emit("delete-note", this.note.id);
+            },
+            getKeyboardShortcuts() {
+                return [
+                    {
+                        key: keyboardKeys.delete,
+                        modifiers: keyboardKeys.ctrlKey,
+                        preventDefault: true,
+                        stopPropagation: false,
+                        callback: () => {
+                            this.deleteNoteClicked();
+                        }
+                    },
+                    {
+                        key: keyboardKeys.r,
+                        modifiers: keyboardKeys.ctrlKey,
+                        preventDefault: true,
+                        stopPropagation: false,
+                        callback: () => {
+                            this.resetNote();
+                        }
+                    },
+                    {
+                        key: keyboardKeys.e,
+                        modifiers: keyboardKeys.ctrlKey,
+                        preventDefault: true,
+                        stopPropagation: false,
+                        callback: () => {
+                            this.editMode ? this.finishEditNote() : this.editNote();
+                        }
+                    },
+                    {
+                        key: keyboardKeys.y,
+                        modifiers: keyboardKeys.ctrlKey,
+                        preventDefault: true,
+                        stopPropagation: false,
+                        callback: () => {
+                            this.deletePrompt && this.confirmDelete();
+                        }
+                    }
+                ];
             }
         }
     };
@@ -143,7 +195,7 @@
         min-width: 250px;
     }
 
-    .top-toolbar-buttons {
+    .top-note-toolbar-buttons {
         display: flex;
         margin-bottom: 5px;
     }

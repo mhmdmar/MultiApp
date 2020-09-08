@@ -5,7 +5,7 @@
         </div>
         <div class="toolbar-container" :class="{'disabled-toolbar': isEditMode}">
             <SVGIcon
-                class="top-toolbar-icon"
+                class="top-toolbar-icon tooltip"
                 icon_name="Toolbar_Add"
                 :disabled="isEditMode"
                 :onClickCB="addNote"
