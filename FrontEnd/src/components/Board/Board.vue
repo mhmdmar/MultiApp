@@ -20,8 +20,8 @@
 </template>
 
 <script>
-    import TopToolbar from "@/components/TopToolbar";
-    import Note from "@/components/Note";
+    import TopToolbar from "@/components/Board/TopToolbar";
+    import Note from "@/components/Board/Note";
     import StorageBoard from "@/utils/BoardUtils/Board";
     const storageBoard = new StorageBoard();
     import {mapGetters} from "vuex";
@@ -100,8 +100,4 @@
     };
 </script>
 
-<style scoped>
-    div[tabindex="0"]:focus {
-        outline: none;
-    }
-</style>
+<style scoped lang="scss"></style>

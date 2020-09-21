@@ -9,16 +9,16 @@
     >
         <div class="top-toolbar">
             <div class="top-note-toolbar-buttons" v-if="!editMode">
-                <SVGIcon icon_name="Edit" :onClickCB="editNote"></SVGIcon>
+                <SVGIcon iconName="Edit" @click="editNote"></SVGIcon>
                 <SVGIcon
-                    icon_name="Hint"
+                    iconName="Hint"
                     :disabled="resetNoteDisabled"
-                    :onClickCB="resetNote"
+                    @click="resetNote"
                 ></SVGIcon>
                 <div class="flex-right-side">
                     <SVGIcon
-                        icon_name="Toolbar_Delete"
-                        :onClickCB="deleteNoteClicked"
+                        iconName="Toolbar_Delete"
+                        @click="deleteNoteClicked"
                     ></SVGIcon>
                     <button class="toolbar-button ellipsis">
                         {{ note.category }}
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div v-else>
-                <SVGIcon icon_name="Arrow_Left" :onClickCB="finishEditNote"></SVGIcon>
+                <SVGIcon iconName="Arrow_Left" @click="finishEditNote"></SVGIcon>
             </div>
         </div>
         <label class="text-label">
@@ -43,13 +43,13 @@
             <div class="confirm-delete-buttons">
                 <SVGIcon
                     class="error-icon"
-                    icon_name="Error"
-                    :onClickCB="cancelDelete"
+                    iconName="Error"
+                    @click="cancelDelete"
                 ></SVGIcon>
                 <SVGIcon
                     class="success-icon"
-                    icon_name="Confirm"
-                    :onClickCB="confirmDelete"
+                    iconName="Confirm"
+                    @click="confirmDelete"
                 ></SVGIcon>
             </div>
         </div>
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-    import SVGIcon from "@/components/SVGIcon";
+    import SVGIcon from "@/components/Board/SVGIcon";
     import {mapGetters, mapMutations} from "vuex";
     import keyboardShortcut from "@/directives/keyboardShortcut";
     import keyboardKeys from "@/utils/keyboardKeys.json";

@@ -1,9 +1,9 @@
 <template>
     <svgicon
         class="toolbar-icon"
-        :icon="icon_name"
+        :icon="iconName"
         :disabled="disabled"
-        @click="activateCallback"
+        @click="emitClick"
     ></svgicon>
 </template>
 
@@ -20,18 +20,19 @@
     import "@/components/icons/Dragging";
     import "@/components/icons/Arrow_Left";
     import "@/components/icons/Search";
+    import "@/components/icons/Board";
     export default {
         name: "SVGIcon",
-        props: ["onClickCB", "icon_name", "disabled"],
-        data() {
-            return {};
-        },
+        props: ["iconName", "disabled"],
         methods: {
-            activateCallback() {
+            emitClick() {
                 if (!this.disabled) {
-                    this.onClickCB?.();
+                    this.$emit("click");
                 }
             }
+        },
+        data() {
+            return {};
         }
     };
 </script>

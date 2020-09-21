@@ -13,6 +13,7 @@
         "core-js": "^3.6.5",
         "uuid": "^8.3.0",
         "vue": "^2.6.12",
+        "vue-confetti": "^2.2.1",
         "vuex": "^3.4.0"
     },
     "devDependencies": {
@@ -32,6 +33,7 @@
         "prettier": "^1.19.1",
         "sass-loader": "^8.0.2",
         "typescript": "^4.0.2",
+        "vue-router": "^3.4.3",
         "vue-svgicon": "^3.2.8",
         "vue-template-compiler": "^2.6.12"
     },

@@ -3,9 +3,11 @@ import DataService from "@/services/DataService";
 import StorageService from "@/services/StorageService";
 import Note from "@/utils/BoardUtils/Note";
 let mockService = process.env.NODE_ENV !== "production";
-let storage = new DataService();
+let storage;
 if (mockService) {
     storage = StorageService;
+} else {
+    storage = new DataService();
 }
 
 class Board {

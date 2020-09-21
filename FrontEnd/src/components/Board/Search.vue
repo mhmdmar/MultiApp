@@ -10,7 +10,7 @@
             />
         </label>
         <SVGIcon
-            icon_name="Search"
+            iconName="Search"
             class="search-icon"
             :class="[searchText === '' ? 'visible' : 'hidden']"
             :disabled="disabled"
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import SVGIcon from "@/components/SVGIcon";
+    import SVGIcon from "@/components/Board/SVGIcon";
     export default {
         name: "Search",
         components: {SVGIcon},

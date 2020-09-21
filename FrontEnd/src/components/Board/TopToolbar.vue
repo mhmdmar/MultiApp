@@ -5,16 +5,16 @@
         </div>
         <div class="toolbar-container" :class="{'disabled-toolbar': isEditMode}">
             <SVGIcon
-                class="top-toolbar-icon tooltip"
-                icon_name="Toolbar_Add"
+                class="top-toolbar-icon"
+                iconName="Toolbar_Add"
                 :disabled="isEditMode"
-                :onClickCB="addNote"
+                @click="addNote"
             ></SVGIcon>
             <SVGIcon
                 class="top-toolbar-icon"
-                icon_name="Toolbar_Export"
+                iconName="Toolbar_Export"
                 :disabled="isEditMode || !isBoardDirty"
-                :onClickCB="saveNotes"
+                @click="saveNotes"
             ></SVGIcon>
             <Search class="search-bar" :disabled="isEditMode"></Search>
         </div>
@@ -22,8 +22,8 @@
 </template>
 
 <script>
-    import SVGIcon from "@/components/SVGIcon";
-    import Search from "@/components/Search";
+    import SVGIcon from "@/components/Board/SVGIcon";
+    import Search from "@/components/Board/Search";
     import {mapGetters} from "vuex";
 
     export default {

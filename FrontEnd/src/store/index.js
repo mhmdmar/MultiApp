@@ -9,13 +9,7 @@ const debug = process.env.NODE_ENV !== "production";
 let logger;
 
 if (debug) {
-    logger = createLogger({
-        filter(mutation) {
-            return (
-                mutation.type !== "updateHint" && mutation.type !== "restoreGlobalHint"
-            );
-        }
-    });
+    logger = createLogger();
 }
 export default new Vuex.Store({
     modules: {boardModule},
