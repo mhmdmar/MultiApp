@@ -5,7 +5,11 @@ const appsList = [
     },
     {
         path: "MemoryGame",
-        iconName: "Edit"
+        iconName: "Search"
+    },
+    {
+        path: "Gallery",
+        iconName: "Snapshot"
     }
 ];
 export default appsList;

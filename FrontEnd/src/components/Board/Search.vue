@@ -9,20 +9,20 @@
                 v-model="searchText"
             />
         </label>
-        <SVGIcon
-            iconName="Search"
+        <SvgIcon
+            icon="Search"
             class="search-icon"
             :class="[searchText === '' ? 'visible' : 'hidden']"
             :disabled="disabled"
-        ></SVGIcon>
+        ></SvgIcon>
     </div>
 </template>
 
 <script>
-    import SVGIcon from "@/components/Board/SVGIcon";
+    import SvgIcon from "@/components/Shared/SvgIcon";
     export default {
         name: "Search",
-        components: {SVGIcon},
+        components: {SvgIcon},
         props: ["disabled"],
         data() {
             return {

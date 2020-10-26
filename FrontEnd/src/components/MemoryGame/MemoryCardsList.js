@@ -1,7 +1,7 @@
 export let memoryCardsList = [
-    "Arrow_Down",
-    "Arrow_Left",
-    "Arrow_Up",
+    "ArrowDown",
+    "ArrowLeft",
+    "ArrowUp",
     "Board",
     "Confirm",
     "Dragging",
@@ -9,9 +9,9 @@ export let memoryCardsList = [
     "Error",
     "Hint",
     "Search",
-    "Toolbar_Add",
-    "Toolbar_Delete",
-    "Toolbar_Export"
+    "Add",
+    "Delete",
+    "Export"
 ];
 
 export default memoryCardsList;

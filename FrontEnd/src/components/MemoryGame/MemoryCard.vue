@@ -9,7 +9,7 @@
             >
                 <div class="card__face card__face--front">Card</div>
                 <div class="card__face card__face--back">
-                    <SVGIcon class="memory-card-icon" :iconName="iconName"></SVGIcon>
+                    <SvgIcon class="memory-card-icon" :icon="iconName"></SvgIcon>
                 </div>
             </div>
         </div>
@@ -17,10 +17,10 @@
 </template>
 
 <script>
-    import SVGIcon from "@/components/Board/SVGIcon";
+    import SvgIcon from "@/components/Shared/SvgIcon";
     export default {
         name: "MemoryCard",
-        components: {SVGIcon},
+        components: {SvgIcon},
         props: {
             iconName: {
                 type: String,

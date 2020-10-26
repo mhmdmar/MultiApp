@@ -3,11 +3,7 @@
         <div class="counter-container">
             <span>Number of tries {{ this.clicksCounter }}</span>
             <div title="start again">
-                <SVGIcon
-                    class="reset-icon"
-                    iconName="Dragging"
-                    @click="resetGame"
-                ></SVGIcon>
+                <SvgIcon class="reset-icon" icon="Dragging" @click="resetGame"></SvgIcon>
             </div>
         </div>
         <div class="memory-card-container">
@@ -28,12 +24,12 @@
     import MemoryCard from "@/components/MemoryGame/MemoryCard";
     import memoryCardsList from "@/components/MemoryGame/MemoryCardsList";
     import VueConfetti from "vue-confetti";
-    import SVGIcon from "@/components/Board/SVGIcon";
+    import SvgIcon from "@/components/Shared/SvgIcon";
 
     Vue.use(VueConfetti);
     export default {
         name: "MemoryBoard",
-        components: {SVGIcon, MemoryCard},
+        components: {SvgIcon, MemoryCard},
         data() {
             return {
                 cards: [],

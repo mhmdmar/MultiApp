@@ -4,31 +4,31 @@
             <span id="appName">Notebook</span>
         </div>
         <div class="toolbar-container" :class="{'disabled-toolbar': isEditMode}">
-            <SVGIcon
+            <SvgIcon
                 class="top-toolbar-icon"
-                iconName="Toolbar_Add"
+                icon="Add"
                 :disabled="isEditMode"
                 @click="addNote"
-            ></SVGIcon>
-            <SVGIcon
+            ></SvgIcon>
+            <SvgIcon
                 class="top-toolbar-icon"
-                iconName="Toolbar_Export"
+                icon="Export"
                 :disabled="isEditMode || !isBoardDirty"
                 @click="saveNotes"
-            ></SVGIcon>
+            ></SvgIcon>
             <Search class="search-bar" :disabled="isEditMode"></Search>
         </div>
     </div>
 </template>
 
 <script>
-    import SVGIcon from "@/components/Board/SVGIcon";
+    import SvgIcon from "@/components/Shared/SvgIcon";
     import Search from "@/components/Board/Search";
     import {mapGetters} from "vuex";
 
     export default {
         name: "TopToolbar",
-        components: {Search, SVGIcon},
+        components: {Search, SvgIcon},
         computed: {
             ...mapGetters(["searchText", "isBoardDirty", "isEditMode"])
         },

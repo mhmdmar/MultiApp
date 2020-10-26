@@ -9,24 +9,24 @@
     >
         <div class="top-toolbar">
             <div class="top-note-toolbar-buttons" v-if="!editMode">
-                <SVGIcon iconName="Edit" @click="editNote"></SVGIcon>
-                <SVGIcon
-                    iconName="Hint"
-                    :disabled="resetNoteDisabled"
-                    @click="resetNote"
-                ></SVGIcon>
+                <div class="left-toolbar-icon">
+                    <SvgIcon icon="Edit" @click="editNote"></SvgIcon>
+                    <SvgIcon
+                        icon="Refresh"
+                        :disabled="resetNoteDisabled"
+                        @click="resetNote"
+                    >
+                    </SvgIcon>
+                </div>
                 <div class="flex-right-side">
-                    <SVGIcon
-                        iconName="Toolbar_Delete"
-                        @click="deleteNoteClicked"
-                    ></SVGIcon>
+                    <SvgIcon icon="Delete" @click="deleteNoteClicked"></SvgIcon>
                     <button class="toolbar-button ellipsis">
                         {{ note.category }}
                     </button>
                 </div>
             </div>
             <div v-else>
-                <SVGIcon iconName="Arrow_Left" @click="finishEditNote"></SVGIcon>
+                <SvgIcon icon="ArrowLeft" @click="finishEditNote"></SvgIcon>
             </div>
         </div>
         <label class="text-label">
@@ -41,23 +41,23 @@
         <div class="confirm-delete" :class="[deletePrompt ? 'visible' : 'hidden']">
             <i class="confirm-delete-message">Confirm Delete</i>
             <div class="confirm-delete-buttons">
-                <SVGIcon
+                <SvgIcon
                     class="error-icon"
-                    iconName="Error"
+                    icon="DialogError"
                     @click="cancelDelete"
-                ></SVGIcon>
-                <SVGIcon
+                ></SvgIcon>
+                <SvgIcon
                     class="success-icon"
-                    iconName="Confirm"
+                    icon="Confirm"
                     @click="confirmDelete"
-                ></SVGIcon>
+                ></SvgIcon>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import SVGIcon from "@/components/Board/SVGIcon";
+    import SvgIcon from "@/components/Shared/SvgIcon";
     import {mapGetters, mapMutations} from "vuex";
     import keyboardShortcut from "@/directives/keyboardShortcut";
     import keyboardKeys from "@/utils/keyboardKeys.json";
@@ -67,7 +67,7 @@
         directives: {
             keyboardShortcut
         },
-        components: {SVGIcon},
+        components: {SvgIcon},
         data() {
             return {
                 visible: true,
@@ -124,7 +124,7 @@
             },
             resetNote() {
                 this.note.text = this.defaultText;
-                this.note.timestamp = this.timestamp;
+                this.timestamp = this.note.timestamp;
             },
             deleteNoteClicked() {
                 this.deletePrompt = !this.deletePrompt;
@@ -270,5 +270,13 @@
         left: 0;
         width: 100%;
         height: 100%;
+    }
+    .error-icon {
+        margin: 0 10px;
+    }
+    .left-toolbar-icon {
+        display: flex;
+        flex-grow: 0.1;
+        justify-content: space-between;
     }
 </style>

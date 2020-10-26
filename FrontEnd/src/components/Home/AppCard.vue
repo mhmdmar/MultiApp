@@ -1,17 +1,17 @@
 <template>
     <div class="app-card-container">
         <a :href="appPath">
-            <SVGIcon class="app-card-icon" :iconName="iconName"></SVGIcon>
+            <SvgIcon class="app-card-icon" :icon="iconName"></SvgIcon>
         </a>
     </div>
 </template>
 
 <script>
-    import SVGIcon from "@/components/Board/SVGIcon";
+    import SvgIcon from "@/components/Shared/SvgIcon";
     export default {
         name: "AppCard",
         components: {
-            SVGIcon
+            SvgIcon
         },
         props: {
             appPath: {
