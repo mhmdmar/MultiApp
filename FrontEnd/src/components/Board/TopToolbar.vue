@@ -16,6 +16,12 @@
                 :disabled="isEditMode || !isBoardDirty"
                 @click="saveNotes"
             ></SvgIcon>
+            <SvgIcon
+                class="top-toolbar-icon"
+                icon="Refresh"
+                :disabled="isEditMode || !isBoardDirty"
+                @click="resetNotes"
+            ></SvgIcon>
             <Search class="search-bar" :disabled="isEditMode"></Search>
         </div>
     </div>
@@ -28,13 +34,22 @@
 
     export default {
         name: "TopToolbar",
+        props: {
+            isBoardDirty: {
+                type: Boolean,
+                default: false
+            }
+        },
         components: {Search, SvgIcon},
         computed: {
-            ...mapGetters(["searchText", "isBoardDirty", "isEditMode"])
+            ...mapGetters(["searchText", "isEditMode"])
         },
         methods: {
             saveNotes() {
                 this.$emit("saveClicked");
+            },
+            resetNotes() {
+                this.$emit("resetNotesClicked");
             },
             addNote() {
                 this.$emit("addNoteClicked");

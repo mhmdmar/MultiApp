@@ -20,9 +20,6 @@
                 </div>
                 <div class="flex-right-side">
                     <SvgIcon icon="Delete" @click="deleteNoteClicked"></SvgIcon>
-                    <button class="toolbar-button ellipsis">
-                        {{ note.category }}
-                    </button>
                 </div>
             </div>
             <div v-else>
@@ -78,7 +75,7 @@
             };
         },
         computed: {
-            ...mapGetters(["searchText", "isBoardDirty", "isEditMode"]),
+            ...mapGetters(["searchText", "isEditMode"]),
             lastModified() {
                 const timestampToDate = this.timeStampToDate();
                 return timestampToDate.time + "-" + timestampToDate.date;
@@ -91,15 +88,8 @@
             searchText() {
                 this.visible = this.note.text.includes(this.searchText);
             },
-            isBoardDirty(isDirty) {
-                if (isDirty === false) {
-                    this.defaultText = this.note.text;
-                    this.note.timestamp = this.timestamp;
-                }
-            },
-            "note.text"() {
+            defaultText() {
                 this.timestamp = Date.now();
-                this.$emit("text-change");
             }
         },
         methods: {
@@ -133,7 +123,7 @@
                 this.deletePrompt = false;
             },
             confirmDelete() {
-                this.$emit("delete-note", this.note.id);
+                this.$emit("deleteNote", this.note.id);
             },
             getKeyboardShortcuts() {
                 return [
@@ -278,5 +268,8 @@
         display: flex;
         flex-grow: 0.1;
         justify-content: space-between;
+    }
+    .top-toolbar {
+        padding: 2px 8px;
     }
 </style>

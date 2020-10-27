@@ -1,4 +1,3 @@
-import Category from "@/utils/BoardUtils/Category";
 const StorageService = {
     async getDataFromStorage() {
         if (localStorage.Board) {
@@ -19,28 +18,20 @@ const StorageService = {
         });
     },
     checkData() {
-        if (!this.storedBoard.categories || this.storedBoard.categories.length === 0) {
-            this.storedBoard.categories = this.getDefaultCategories();
-        }
         if (!this.storedBoard.notes) {
             this.storedBoard.notes = [];
         }
-    },
-    getDefaultCategories() {
-        return [new Category("General", true)];
     },
     reset() {
         return {
             notes: [],
             currentID: 0,
-            chosenNoteINDEX: undefined,
-            categories: this.getDefaultCategories()
+            chosenNoteINDEX: undefined
         };
     },
-    async saveToStorage(notes, id, categories) {
+    async saveToStorage(notes, id) {
         this.storedBoard.notes = notes;
         this.storedBoard.currentID = id;
-        this.storedBoard.categories = categories;
         localStorage.Board = JSON.stringify(this.storedBoard);
     }
 };

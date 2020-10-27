@@ -6,14 +6,18 @@
             stopPropagation: true
         }"
     >
-        <TopToolbar @saveClicked="saveBoard" @addNoteClicked="addNote"></TopToolbar>
+        <TopToolbar
+            @saveClicked="saveBoard"
+            @addNoteClicked="addNote"
+            @resetNotesClicked="resetNotes"
+            :isBoardDirty="isBoardDirty"
+        ></TopToolbar>
         <div>
             <Note
                 v-for="note in notes"
                 :key="note.id"
                 :note="note"
-                @text-change="setIsDirty"
-                @delete-note="deleteNote"
+                @deleteNote="deleteNote"
             ></Note>
         </div>
     </div>
@@ -22,11 +26,21 @@
 <script>
     import TopToolbar from "@/components/Board/TopToolbar";
     import Note from "@/components/Board/Note";
-    import StorageBoard from "@/utils/BoardUtils/Board";
-    const storageBoard = new StorageBoard();
     import {mapGetters} from "vuex";
     import keyboardShortcut from "@/directives/keyboardShortcut";
     import keyboardKeys from "@/utils/keyboardKeys.json";
+
+    import {v4 as uniqueId} from "uuid";
+    import DataService from "@/services/DataService";
+    import StorageService from "@/services/StorageService";
+
+    let mockService = process.env.NODE_ENV !== "production";
+    let storage;
+    if (mockService) {
+        storage = StorageService;
+    } else {
+        storage = new DataService();
+    }
     export default {
         name: "Board",
         components: {Note, TopToolbar},
@@ -36,33 +50,84 @@
         data() {
             return {
                 notes: [],
-                unchangedNotes: [],
-                isDirty: false
+                unchangedNotes: ""
             };
         },
         computed: {
-            ...mapGetters(["searchText"])
+            ...mapGetters(["searchText"]),
+            isBoardDirty() {
+                return JSON.stringify(this.notes) !== this.unchangedNotes;
+            }
         },
         async mounted() {
-            await storageBoard.setBoard();
-            this.notes = storageBoard.notes;
-            this.unchangedNotes = JSON.stringify(this.notes);
+            await this.setBoard();
         },
         methods: {
+            async setBoard() {
+                const data = await storage.getDataFromStorage();
+                this.unchangedNotes = JSON.stringify(data.notes);
+                this.notes = data.notes;
+            },
+            resetNotes() {
+                this.notes = JSON.parse(this.unchangedNotes);
+            },
+            getNotes() {
+                return this.notes;
+            },
+            addNote(note) {
+                if (!note) {
+                    note = this.createNewNote();
+                }
+                this.notes.push(note);
+            },
+            createNewNote() {
+                return {
+                    id: uniqueId(),
+                    text: "",
+                    timestamp: new Date()
+                };
+            },
+            getIndexById(id) {
+                return this.notes.findIndex(note => note.id === id);
+            },
+            removeNoteById(id) {
+                const index = this.getIndexById(id);
+                this.removeNoteByIndex(index);
+            },
+            removeNoteByIndex(index) {
+                this.notes.splice(index, 1);
+            },
+            getBoardCopy() {
+                return {
+                    notes: [...this.notes]
+                };
+            },
+            updateTimeStamp() {
+                let unchangedNotes = JSON.parse(this.unchangedNotes);
+                for (let i = 0; i < this.notes.length; i++) {
+                    let curNote = this.notes[i];
+                    let curUnchangedNote = unchangedNotes[i];
+                    if (
+                        curNote.id === curUnchangedNote.id &&
+                        curNote.text !== curUnchangedNote.text
+                    ) {
+                        curNote.timestamp = new Date();
+                    }
+                }
+            },
             saveBoard() {
-                storageBoard.save();
-                this.setIsDirty(false);
-            },
-            setIsDirty(isDirty = true) {
-                this.$store.commit("updateIsBoardDirty", isDirty);
-            },
-            addNote() {
-                storageBoard.addNote();
-                this.setIsDirty();
+                this.updateTimeStamp();
+                storage
+                    .saveToStorage(this.notes)
+                    .then(() => {
+                        this.unchangedNotes = JSON.stringify(this.notes);
+                    })
+                    .catch(() => {
+                        console.error("SAVE ISSUE");
+                    });
             },
             deleteNote(noteId) {
-                storageBoard.removeNoteById(noteId);
-                this.setIsDirty();
+                this.removeNoteById(noteId);
             },
             getKeyboardShortcuts() {
                 return [

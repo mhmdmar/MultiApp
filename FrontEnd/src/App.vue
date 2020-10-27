@@ -8,7 +8,7 @@
 <script>
     import Vue from "vue";
     import SvgSprite from "@/components/Shared/SvgSprite";
-    import eventBus from "./utils/eventBus";
+    import eventBus from "@/utils/eventBus";
     eventBus.setEventBus(new Vue());
     export default {
         name: "App",

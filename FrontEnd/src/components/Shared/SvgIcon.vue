@@ -2,7 +2,7 @@
     <svg
         class="icon"
         :class="[iconClass, disabled ? 'disabled' : '']"
-        @click="$emit('click')"
+        @click="iconClicked"
     >
         <use :href="iconUrl" :xlink:href="iconUrl"></use>
     </svg>
@@ -27,6 +27,13 @@
             },
             iconClass: function() {
                 return `icon-${this.icon}`;
+            }
+        },
+        methods: {
+            iconClicked() {
+                if (!this.disabled) {
+                    this.$emit("click");
+                }
             }
         }
     };

@@ -13,9 +13,8 @@ class DataService {
         }
         return data;
     }
-    async saveToStorage(notes, categories) {
-        const data = {notes, categories};
-        await axios.post(this.concatCommandWithPrefix("saveBoard"), data);
+    async saveToStorage(notes) {
+        await axios.post(this.concatCommandWithPrefix("saveBoard"), notes);
     }
     concatCommandWithPrefix(command) {
         return apiUrlPrefix + command;
