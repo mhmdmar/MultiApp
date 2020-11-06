@@ -20,11 +20,9 @@
 
 <style scoped>
     .app-list-container {
-        position: fixed;
+        position: absolute;
         top: 50%;
         left: 50%;
-        margin-top: -50px;
-        margin-left: -100px;
-        background-color: #ffffff;
+        transform: translate(-50%, -50%);
     }
 </style>
