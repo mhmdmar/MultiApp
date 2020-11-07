@@ -38,6 +38,7 @@
                 state: gameState.PAUSED,
                 dx: 10,
                 dy: 0,
+                boardSize: config.boardSize + "px",
                 timer: new Timer(config.gameSpeed, this.nextGameTick)
             };
         },
@@ -45,6 +46,7 @@
         mounted() {
             this.snakeBoard = this.$refs["snakeBoard"];
             this.snakeBoardContext = this.snakeBoard.getContext("2d");
+            this.generateFoodCoordinates();
             this.pauseGame();
         },
         methods: {
@@ -52,7 +54,6 @@
                 this.timer.stop();
                 this.drawPausedBackground();
                 this.drawSnake();
-                this.generateFoodCoordinates();
                 this.drawFood();
             },
             drawPausedBackground() {
@@ -65,14 +66,18 @@
                 );
             },
             resetGame() {
-                this.drawFood();
                 this.snake = [
                     {x: 200, y: 200},
                     {x: 190, y: 200},
                     {x: 180, y: 200},
                     {x: 170, y: 200}
                 ];
+                this.dx = 10;
+                this.dy = 0;
                 this.score = 0;
+                this.clearBoard();
+                this.generateFoodCoordinates();
+                this.pauseGame();
             },
             continueGame() {
                 this.timer.start();
@@ -86,7 +91,7 @@
                         callback: () => {
                             if (this.state === gameState.DEAD) {
                                 this.state = gameState.PAUSED;
-                                this.startGame();
+                                this.resetGame();
                             } else if (this.state === gameState.ACTIVE) {
                                 this.state = gameState.PAUSED;
                                 this.pauseGame();
@@ -166,10 +171,10 @@
                     )
                         return true;
                 }
-                const hitLeftWall = this.snake[0].x < 0;
-                const hitRightWall = this.snake[0].x >= this.snakeBoard.width;
-                const hitTopWall = this.snake[0].y < 0;
-                const hitBottomWall = this.snake[0].y >= this.snakeBoard.height;
+                const hitLeftWall = this.snake[0].x <= 0;
+                const hitRightWall = this.snake[0].x >= this.snakeBoard.width - 10;
+                const hitTopWall = this.snake[0].y <= 0;
+                const hitBottomWall = this.snake[0].y >= this.snakeBoard.height - 10;
                 return hitLeftWall || hitRightWall || hitTopWall || hitBottomWall;
             },
             nextGameTick() {
@@ -178,6 +183,7 @@
                 this.moveSnake();
                 this.drawSnake();
                 if (this.hasGameEnded()) {
+                    this.state = gameState.DEAD;
                     this.timer.stop();
                 }
             },
