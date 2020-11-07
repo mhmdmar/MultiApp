@@ -6,8 +6,13 @@
             stopPropagation: true
         }"
     >
-        <div id="score">{{ score }}</div>
-        <canvas id="snakeBoard" ref="snakeBoard" width="400" height="400"></canvas>
+        <div id="score" class="title-container">{{ score }}</div>
+        <canvas
+            id="snakeBoard"
+            ref="snakeBoard"
+            :width="boardSize"
+            :height="boardSize"
+        ></canvas>
     </div>
 </template>
 
@@ -246,9 +251,15 @@
 </script>
 
 <style scoped>
+    .title-container {
+        top: 10%;
+    }
+    #snakeBoard {
+        top: 60%;
+    }
+    .title-container,
     #snakeBoard {
         position: absolute;
-        top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
     }

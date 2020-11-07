@@ -14,6 +14,10 @@ const appsList = [
     {
         path: "SnakeGame",
         iconName: "Snake"
+    },
+    {
+        path: "MazeGame",
+        iconName: "MazeGame"
     }
 ];
 export default appsList;
