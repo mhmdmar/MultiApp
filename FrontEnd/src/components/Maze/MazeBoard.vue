@@ -248,6 +248,18 @@
                     this.mazeBoard.height
                 );
                 this.drawBoardBlocks(config.emptyBlockColor, config.emptyBlockBorder);
+                this.drawBlockByIndexPlace(
+                    0,
+                    0,
+                    config.traverseBlockColor,
+                    config.traverseBlockColor
+                );
+                this.drawBlockByIndexPlace(
+                    this.blockSize - 1,
+                    this.blockSize - 1,
+                    config.traverseBlockColor,
+                    config.traverseBlockColor
+                );
             },
             loopBoardBlocks(callback) {
                 for (let i = 0; i <= this.blocksNumber; i++) {

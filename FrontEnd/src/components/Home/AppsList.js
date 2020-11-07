@@ -1,23 +1,23 @@
 const appsList = [
     {
-        path: "Board",
-        iconName: "Board"
+        path: "Notebook",
+        iconName: "Board",
+        tooltip: "Notebook to store all your handy notes"
     },
     {
         path: "MemoryGame",
-        iconName: "Search"
-    },
-    {
-        path: "Gallery",
-        iconName: "Snapshot"
+        iconName: "Search",
+        tooltip: "Train your memory with this memory game"
     },
     {
         path: "SnakeGame",
-        iconName: "Snake"
+        iconName: "Snake",
+        tooltip: "Pass the time by playing old school snake game"
     },
     {
         path: "MazeGame",
-        iconName: "MazeGame"
+        iconName: "Maze",
+        tooltip: "Check what is the fastest route from point A to point B"
     }
 ];
 export default appsList;

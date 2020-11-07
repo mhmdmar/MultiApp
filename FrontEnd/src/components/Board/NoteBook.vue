@@ -42,7 +42,7 @@
         storage = new DataService();
     }
     export default {
-        name: "Board",
+        name: "NoteBook",
         components: {Note, TopToolbar},
         directives: {
             keyboardShortcut

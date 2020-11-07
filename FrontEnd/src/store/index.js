@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import boardModule from "@/store/modules/board";
+import boardModule from "@/store/modules/notebook";
 import createLogger from "vuex/dist/logger";
 Vue.use(Vuex);
 
