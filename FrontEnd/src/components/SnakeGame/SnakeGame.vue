@@ -191,12 +191,21 @@
                 this.snakeBoardContext.strokeRect(this.foodX, this.foodY, 10, 10);
             },
             drawSnake() {
-                this.snake.forEach(this.drawSnakePart);
+                this.drawBlock(
+                    this.snake[0],
+                    config.snakeHeadColor,
+                    config.snakeBorderColor
+                );
+                for (let i = 1; i < this.snake.length; i++) {
+                    this.drawSnakePart(this.snake[i]);
+                }
             },
             drawSnakePart(snakePart) {
-                this.snakeBoardContext.fillStyle = config.snakeColor;
-                this.snakeBoardContext.fillStyle = config.snakeColor;
-                this.snakeBoardContext.strokestyle = config.snakeBorderColor;
+                this.drawBlock(snakePart, config.snakeColor, config.snakeBorderColor);
+            },
+            drawBlock(snakePart, color, borderColor) {
+                this.snakeBoardContext.fillStyle = color;
+                this.snakeBoardContext.strokestyle = borderColor;
                 this.snakeBoardContext.fillRect(snakePart.x, snakePart.y, 10, 10);
                 this.snakeBoardContext.strokeRect(snakePart.x, snakePart.y, 10, 10);
             },

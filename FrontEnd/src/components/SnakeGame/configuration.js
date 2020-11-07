@@ -8,6 +8,7 @@ const config = {
     border: "black",
     background: "white",
     snakeColor: "lightblue",
+    snakeHeadColor: "red",
     snakeBorderColor: "darkblue",
     boardSize: 400
 };
