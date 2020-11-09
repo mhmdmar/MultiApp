@@ -9,8 +9,7 @@ const config = {
     background: "white",
     snakeColor: "lightblue",
     snakeHeadColor: "red",
-    snakeBorderColor: "darkblue",
-    boardSize: 400
+    snakeBorderColor: "darkblue"
 };
 
 export default config;

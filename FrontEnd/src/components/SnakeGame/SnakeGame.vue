@@ -7,12 +7,7 @@
         }"
     >
         <div id="score" class="title-container">{{ score }}</div>
-        <canvas
-            id="snakeBoard"
-            ref="snakeBoard"
-            :width="boardSize"
-            :height="boardSize"
-        ></canvas>
+        <canvas id="snakeBoard" ref="snakeBoard" width="400px" height="400px"></canvas>
     </div>
 </template>
 
@@ -176,21 +171,26 @@
                     )
                         return true;
                 }
-                const hitLeftWall = this.snake[0].x <= 0;
-                const hitRightWall = this.snake[0].x >= this.snakeBoard.width - 10;
-                const hitTopWall = this.snake[0].y <= 0;
-                const hitBottomWall = this.snake[0].y >= this.snakeBoard.height - 10;
+                const hitLeftWall = this.snake[0].x < 0;
+                const hitRightWall = this.snake[0].x > this.snakeBoard.width - 10;
+                const hitTopWall = this.snake[0].y < 0;
+                const hitBottomWall = this.snake[0].y > this.snakeBoard.height - 10;
                 return hitLeftWall || hitRightWall || hitTopWall || hitBottomWall;
             },
             nextGameTick() {
+                if (this.hasGameEnded()) {
+                    this.endGame();
+                    return;
+                }
                 this.clearBoard();
                 this.drawFood();
                 this.moveSnake();
                 this.drawSnake();
-                if (this.hasGameEnded()) {
-                    this.state = gameState.DEAD;
-                    this.timer.stop();
-                }
+            },
+            endGame() {
+                this.state = gameState.DEAD;
+                this.timer.stop();
+                window.alert("Your snake died, press 'space' to restart");
             },
             randomCoordinates(min, max) {
                 return Math.round((Math.random() * (max - min) + min) / 10) * 10;

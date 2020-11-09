@@ -17,16 +17,26 @@
 <script>
     import config from "@/components/Maze/configuration";
 
+    const NODE_STATE = {
+        UNVISITED: 1,
+        VISITED: 2,
+        TARGET: 3
+    };
     export default {
         name: "MazeBoard",
         data() {
+            let numberOfBlocks = config.boardSize / config.blockSize;
             return {
                 boardSize: config.boardSize,
-                blockSize: config.boardSize / config.blockSize,
+                blockSize: numberOfBlocks,
                 blocksWall: new Set(),
-                blocksNumber: config.boardSize / config.blockSize - 1,
+                blocksNumber: numberOfBlocks - 1,
                 gameActive: true,
-                score: 0
+                score: 0,
+                sourceI: 0,
+                sourceJ: 0,
+                targetI: numberOfBlocks - 1,
+                targetJ: numberOfBlocks - 1
             };
         },
         mounted() {
@@ -48,7 +58,6 @@
         },
         methods: {
             titleButtonClicked() {
-                console.log(this.gameActive);
                 if (this.gameActive) {
                     this.startTraverseMaze();
                 } else {
@@ -99,22 +108,22 @@
             },
             startTraverseMaze() {
                 this.gameActive = false;
-                let mazeMatrixRep = this.getMatrixRepresentation();
-                let solveRoute = this.mazeSolver(mazeMatrixRep);
-                if (solveRoute.length > 0) {
-                    let solvedRoutesArr = solveRoute.map(routeCell =>
-                        this.getIndexesValue(routeCell)
-                    );
-                    solvedRoutesArr.forEach(routeCell => {
+                let solvedRoute = this.mazeSolver();
+                let solvedRouteLen = solvedRoute.length;
+                if (solvedRouteLen > 0) {
+                    solvedRoute.forEach(routeCell => {
                         let {i, j} = routeCell;
                         this.drawBlockByIndexPlace(
                             i,
                             j,
-                            config.traverseBlockColor,
-                            config.traverseBlockBorder
+                            config.pathBlockColor,
+                            config.pathBlockBorder
                         );
                     });
-                    this.score = solvedRoutesArr.length;
+                    this.drawSourceTargetBlock();
+                    this.score = solvedRoute.length;
+                } else {
+                    window.alert("No path was found, click RESET to try again");
                 }
             },
             getMatrixRepresentation() {
@@ -132,52 +141,51 @@
                         arr[i][j] = 1;
                     }
                 });
-                arr[this.blocksNumber][this.blocksNumber] = 2;
                 return arr;
             },
-            mazeSolver(maze) {
-                this.maze = maze;
+            mazeSolver() {
+                let maze = this.getMatrixRepresentation();
+                maze[this.targetI][this.targetJ] = NODE_STATE.TARGET;
                 let route = [];
-                this.traverse = (column, row) => {
-                    let indexesKey = this.getIndexesKey(column, row);
+                const _traverse = (column, row) => {
                     let success = false;
-                    if (this.maze[column][row] === 2) {
-                        route.push(indexesKey);
+                    if (maze[column][row] === NODE_STATE.TARGET) {
+                        route.push({i: column, j: row});
                         return true;
-                    } else if (this.maze[column][row] === 1) {
-                        this.maze[column][row] = 9;
-                        if (column < this.maze.length - 1) {
-                            success = this.traverse(column + 1, row);
+                    } else if (maze[column][row] === NODE_STATE.UNVISITED) {
+                        maze[column][row] = NODE_STATE.VISITED;
+                        if (column < maze.length - 1) {
+                            success = _traverse(column + 1, row);
                         }
                         if (success) {
-                            route.push(indexesKey);
+                            route.push({i: column, j: row});
                             return true;
                         }
-                        if (row < this.maze[column].length - 1) {
-                            success = this.traverse(column, row + 1);
+                        if (row < maze[column].length - 1) {
+                            success = _traverse(column, row + 1);
                         }
                         if (success) {
-                            route.push(indexesKey);
+                            route.push({i: column, j: row});
                             return true;
                         }
                         if (column > 0) {
-                            success = this.traverse(column - 1, row);
+                            success = _traverse(column - 1, row);
                         }
                         if (success) {
-                            route.push(indexesKey);
+                            route.push({i: column, j: row});
                             return true;
                         }
                         if (row > 0) {
-                            success = this.traverse(column, row - 1);
+                            success = _traverse(column, row - 1);
                         }
                         if (success) {
-                            route.push(indexesKey);
+                            route.push({i: column, j: row});
                             return true;
                         }
                     }
                     return success;
                 };
-                this.traverse(0, 0);
+                _traverse(this.sourceI, this.sourceJ);
                 return route;
             },
             isEnabledBlockIndex(i, j) {
@@ -200,10 +208,6 @@
             },
             getIndexesKey(i, j) {
                 return `${i}:${j}`;
-            },
-            getIndexesValue(key) {
-                let coords = key.split(":");
-                return {i: coords[0], j: coords[1]};
             },
             removeWallBlock(event) {
                 let {i, j} = this.getMatchingCoordinate(event);
@@ -247,20 +251,27 @@
                     this.mazeBoard.width,
                     this.mazeBoard.height
                 );
+                this.drawEmptyBoardBlocks();
+                this.drawSourceTargetBlock();
+            },
+            drawEmptyBoardBlocks() {
                 this.drawBoardBlocks(config.emptyBlockColor, config.emptyBlockBorder);
+            },
+            drawSourceTargetBlock() {
                 this.drawBlockByIndexPlace(
                     0,
                     0,
-                    config.traverseBlockColor,
-                    config.traverseBlockColor
+                    config.sourceTargetBlock,
+                    config.sourceTargetBlock
                 );
                 this.drawBlockByIndexPlace(
                     this.blockSize - 1,
                     this.blockSize - 1,
-                    config.traverseBlockColor,
-                    config.traverseBlockColor
+                    config.sourceTargetBlock,
+                    config.sourceTargetBlock
                 );
             },
+
             loopBoardBlocks(callback) {
                 for (let i = 0; i <= this.blocksNumber; i++) {
                     for (let j = 0; j <= this.blocksNumber; j++) {

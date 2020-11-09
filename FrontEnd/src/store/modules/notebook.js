@@ -15,7 +15,6 @@ const boardModule = {
             state.board = data;
         }
     },
-    actions: {},
     getters: {
         searchText(state) {
             return state.searchText;

@@ -5,8 +5,10 @@ const config = {
     wallBlockBorder: "blue",
     emptyBlockColor: "white",
     emptyBlockBorder: "black",
-    traverseBlockColor: "blue",
-    traverseBlockBorder: "lightblue",
+    pathBlockColor: "blue",
+    pathBlockBorder: "lightblue",
+    sourceTargetBlock: "green",
+    sourceTargetBorder: "lightgreen",
     blockSize: 20,
     boardSize: 400
 };
