@@ -153,6 +153,12 @@
             },
             moveSnake() {
                 const head = {x: this.snake[0].x + this.dx, y: this.snake[0].y + this.dy};
+                const hitWall = this.hitAWall();
+                if (hitWall.hit) {
+                    head.x = hitWall.x;
+                    head.y = hitWall.y;
+                }
+
                 this.snake.unshift(head);
                 const hasEatenFood =
                     this.snake[0].x === this.foodX && this.snake[0].y === this.foodY;
@@ -163,6 +169,29 @@
                     this.snake.pop();
                 }
             },
+            hitAWall() {
+                const hitLeftWall = this.snake[0].x < 0;
+                const hitRightWall = this.snake[0].x > this.snakeBoard.width - 10;
+                const hitTopWall = this.snake[0].y < 0;
+                const hitBottomWall = this.snake[0].y > this.snakeBoard.height - 10;
+                let newX, newY;
+                newX = this.snake[0].x + this.dx;
+                newY = this.snake[0].y + this.dy;
+                if (hitLeftWall) {
+                    newX = this.snakeBoard.width - 10;
+                } else if (hitRightWall) {
+                    newX = 0;
+                } else if (hitTopWall) {
+                    newY = this.snakeBoard.height - 10;
+                } else if (hitBottomWall) {
+                    newY = 0;
+                }
+                return {
+                    hit: hitLeftWall || hitRightWall || hitTopWall || hitBottomWall,
+                    x: newX,
+                    y: newY
+                };
+            },
             hasGameEnded() {
                 for (let i = 1; i < this.snake.length; i++) {
                     if (
@@ -171,11 +200,6 @@
                     )
                         return true;
                 }
-                const hitLeftWall = this.snake[0].x < 0;
-                const hitRightWall = this.snake[0].x > this.snakeBoard.width - 10;
-                const hitTopWall = this.snake[0].y < 0;
-                const hitBottomWall = this.snake[0].y > this.snakeBoard.height - 10;
-                return hitLeftWall || hitRightWall || hitTopWall || hitBottomWall;
             },
             nextGameTick() {
                 if (this.hasGameEnded()) {
