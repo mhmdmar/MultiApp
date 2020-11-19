@@ -202,6 +202,12 @@
                     )
                         return true;
                 }
+                if (config.wallsOn) {
+                    const head = this.snake[0];
+                    if (head.x < 0 || head.y < 0 || head.x === 400 || head.y === 400) {
+                        return true;
+                    }
+                }
             },
             nextGameTick() {
                 this.moveSnake();
