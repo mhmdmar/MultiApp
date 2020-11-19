@@ -4,6 +4,9 @@ class Timer {
         this.callback = callback;
         this.interval = null;
     }
+    isOff() {
+        return this.interval === null;
+    }
     start() {
         this.stop();
         this.interval = setInterval(() => {

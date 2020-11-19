@@ -1,6 +1,7 @@
 <template>
     <div
         tabindex="0"
+        ref="snake-board-container"
         v-keyboardShortcut="{
             shortcutsArray: getKeyboardShortcuts(),
             stopPropagation: true,
@@ -8,12 +9,12 @@
         }"
     >
         <div id="score" class="title-container">{{ score }}</div>
-        <canvas id="snakeBoard" ref="snakeBoard" width="400px" height="400px"></canvas>
+        <canvas id="snakeBoard" ref="snakeBoard" height="400px" width="400px"></canvas>
     </div>
 </template>
 
 <script>
-    import config from "@/components/SnakeGame/configuration";
+    import {defaultConfig} from "@/components/SnakeGame/configuration";
     import keyboardShortcut from "@/directives/keyboardShortcut";
     import keyboardKeys from "@/utils/keyboardKeys.json";
     import {gameState} from "@/components/SnakeGame/constants";
@@ -22,6 +23,14 @@
         name: "SnakeGame",
         directives: {
             keyboardShortcut
+        },
+        props: {
+            gameConfig: {
+                type: Object,
+                default() {
+                    return defaultConfig;
+                }
+            }
         },
         data() {
             return {
@@ -39,9 +48,9 @@
                 state: gameState.PAUSED,
                 dx: 10,
                 dy: 0,
-                boardSize: config.boardSize + "px",
-                timer: new Timer(config.gameSpeed, this.nextGameTick),
-                debounceTime: 80
+                boardSize: this.gameConfig.boardSize + "px",
+                timer: new Timer(this.gameConfig.gameSpeed, this.nextGameTick),
+                debounceTime: this.gameConfig.gameSpeed - 10
             };
         },
 
@@ -50,6 +59,7 @@
             this.snakeBoardContext = this.snakeBoard.getContext("2d");
             this.generateFoodCoordinates();
             this.pauseGame();
+            this.$refs["snake-board-container"].focus();
         },
         methods: {
             pauseGame() {
@@ -150,6 +160,28 @@
                                 this.dy = 0;
                             }
                         }
+                    },
+                    {
+                        key: keyboardKeys.backspace,
+                        preventDefault: true,
+                        stopPropagation: false,
+                        callback: () => {
+                            this.resetGame();
+                            this.$emit("gameEnded");
+                        }
+                    },
+                    /*Cheats*/
+                    {
+                        key: keyboardKeys.v,
+                        modifiers: keyboardKeys.ctrlKey,
+                        preventDefault: true,
+                        stopPropagation: false,
+                        callback: () => {
+                            if (this.state === gameState.DEAD) {
+                                this.state = gameState.ACTIVE;
+                                this.moveSnakeStepBack();
+                            }
+                        }
                     }
                 ];
             },
@@ -170,6 +202,10 @@
                 } else {
                     this.snake.pop();
                 }
+            },
+            moveSnakeStepBack() {
+                this.snake.shift();
+                this.pauseGame();
             },
             hitAWall() {
                 const hitLeftWall = this.snake[0].x < 0;
@@ -202,7 +238,7 @@
                     )
                         return true;
                 }
-                if (config.wallsOn) {
+                if (this.gameConfig.wallsOn) {
                     const head = this.snake[0];
                     if (head.x < 0 || head.y < 0 || head.x === 400 || head.y === 400) {
                         return true;
@@ -228,23 +264,27 @@
                 return Math.round((Math.random() * (max - min) + min) / 10) * 10;
             },
             drawFood() {
-                this.snakeBoardContext.fillStyle = config.foodColor;
-                this.snakeBoardContext.strokestyle = config.foodBorder;
+                this.snakeBoardContext.fillStyle = this.gameConfig.foodColor;
+                this.snakeBoardContext.strokestyle = this.gameConfig.foodBorder;
                 this.snakeBoardContext.fillRect(this.foodX, this.foodY, 10, 10);
                 this.snakeBoardContext.strokeRect(this.foodX, this.foodY, 10, 10);
             },
             drawSnake() {
                 this.drawBlock(
                     this.snake[0],
-                    config.snakeHeadColor,
-                    config.snakeBorderColor
+                    this.gameConfig.snakeHeadColor,
+                    this.gameConfig.snakeBorderColor
                 );
                 for (let i = 1; i < this.snake.length; i++) {
                     this.drawSnakePart(this.snake[i]);
                 }
             },
             drawSnakePart(snakePart) {
-                this.drawBlock(snakePart, config.snakeColor, config.snakeBorderColor);
+                this.drawBlock(
+                    snakePart,
+                    this.gameConfig.snakeColor,
+                    this.gameConfig.snakeBorderColor
+                );
             },
             drawBlock(snakePart, color, borderColor) {
                 this.snakeBoardContext.fillStyle = color;
@@ -253,8 +293,8 @@
                 this.snakeBoardContext.strokeRect(snakePart.x, snakePart.y, 10, 10);
             },
             clearBoard() {
-                this.snakeBoardContext.fillStyle = config.boardBackground;
-                this.snakeBoardContext.strokestyle = config.boardBorder;
+                this.snakeBoardContext.fillStyle = this.gameConfig.boardBackground;
+                this.snakeBoardContext.strokestyle = this.gameConfig.boardBorder;
                 this.snakeBoardContext.fillRect(
                     0,
                     0,
