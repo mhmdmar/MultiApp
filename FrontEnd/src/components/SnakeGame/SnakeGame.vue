@@ -3,7 +3,8 @@
         tabindex="0"
         v-keyboardShortcut="{
             shortcutsArray: getKeyboardShortcuts(),
-            stopPropagation: true
+            stopPropagation: true,
+            debounceTime
         }"
     >
         <div id="score" class="title-container">{{ score }}</div>
@@ -39,7 +40,8 @@
                 dx: 10,
                 dy: 0,
                 boardSize: config.boardSize + "px",
-                timer: new Timer(config.gameSpeed, this.nextGameTick)
+                timer: new Timer(config.gameSpeed, this.nextGameTick),
+                debounceTime: 80
             };
         },
 
@@ -102,7 +104,7 @@
                         }
                     },
                     {
-                        key: keyboardKeys.arrow_up,
+                        key: [keyboardKeys.arrow_up, keyboardKeys.w],
                         preventDefault: true,
                         stopPropagation: false,
                         callback: () => {
@@ -114,7 +116,7 @@
                         }
                     },
                     {
-                        key: keyboardKeys.arrow_right,
+                        key: [keyboardKeys.arrow_right, keyboardKeys.d],
                         preventDefault: true,
                         stopPropagation: false,
                         callback: () => {
@@ -126,7 +128,7 @@
                         }
                     },
                     {
-                        key: keyboardKeys.arrow_down,
+                        key: [keyboardKeys.arrow_down, keyboardKeys.s],
                         preventDefault: true,
                         stopPropagation: false,
                         callback: () => {
@@ -138,7 +140,7 @@
                         }
                     },
                     {
-                        key: keyboardKeys.arrow_left,
+                        key: [keyboardKeys.arrow_left, keyboardKeys.a],
                         preventDefault: true,
                         stopPropagation: false,
                         callback: () => {
@@ -202,13 +204,13 @@
                 }
             },
             nextGameTick() {
+                this.moveSnake();
                 if (this.hasGameEnded()) {
                     this.endGame();
                     return;
                 }
                 this.clearBoard();
                 this.drawFood();
-                this.moveSnake();
                 this.drawSnake();
             },
             endGame() {
