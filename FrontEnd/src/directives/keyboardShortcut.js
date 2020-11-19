@@ -13,8 +13,7 @@ const modifiersApplied = (event, shortcut) => {
     }
     return applied;
 };
-
-const validateBinding = (el, shortcutsArray) => {
+const validateShortcutArray = shortcutsArray => {
     let error = "";
     if (shortcutsArray === undefined) {
         error = "undefined shortcuts array";
@@ -32,6 +31,23 @@ const validateBinding = (el, shortcutsArray) => {
             }
         });
     }
+};
+const validateDebounceTime = debounceTime => {
+    let error = "";
+    if (typeof debounceTime !== "number" && debounceTime <= 0) {
+        error = "debounce time can only be positive number";
+    }
+    if (error !== "") {
+        throw new Error(`keyboard-shortcuts binding error: "${error}"`);
+    }
+    return true;
+};
+const validateBinding = binding => {
+    if (binding === undefined) {
+        throw new Error(`cannot bind with empty object`);
+    }
+    validateShortcutArray(binding.shortcutsArray);
+    validateDebounceTime(binding.debounceTime);
 };
 
 const isEnabled = bindingEnabled => {
@@ -62,24 +78,56 @@ const getModifiersLength = shortcut => shortcut?.modifiers?.length || 0;
 
 const getShortcut = (shortcuts, event) => {
     return shortcuts
-        .filter(shortcut => event.keyCode === shortcut.key)
+        .filter(shortcut => {
+            let exist = false;
+            switch (typeof shortcut.key) {
+                case "string":
+                case "number":
+                    exist = event.keyCode === shortcut.key;
+                    break;
+                case "object":
+                    if (Array.isArray(shortcut.key)) {
+                        exist = shortcut.key.includes(event.keyCode);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return exist;
+        })
         .sort(
             (shortcut1, shortcut2) =>
                 getModifiersLength(shortcut2) - getModifiersLength(shortcut1)
         )
         .find(shortcut => modifiersApplied(event, shortcut));
 };
-
+const checkDebounceTime = (el, debounceTime) => {
+    let pass = true;
+    if (debounceTime !== undefined) {
+        if (el.time !== undefined) {
+            pass = Date.now() - el.time > debounceTime;
+        }
+        el.time = Date.now();
+    }
+    return pass;
+};
 // v-shortcuts="{shortcutsArray: getKeyboardShortcuts(), stopPropagation: true}"
 export default {
     bind(el, binding) {
-        const {shortcutsArray, bindingEnabled, stopPropagation} = binding.value;
-        validateBinding(el, shortcutsArray);
+        validateBinding(binding.value);
+        const {
+            shortcutsArray,
+            bindingEnabled,
+            debounceTime,
+            stopPropagation
+        } = binding.value;
         el.keydownCallback = event => {
             if (isEnabled(bindingEnabled)) {
-                stopPropagation && event.stopPropagation();
-                const shortcut = getShortcut(shortcutsArray, event);
-                activateShortcut(shortcut, event);
+                if (checkDebounceTime(el, debounceTime)) {
+                    stopPropagation && event.stopPropagation();
+                    const shortcut = getShortcut(shortcutsArray, event);
+                    activateShortcut(shortcut, event);
+                }
             }
         };
 
