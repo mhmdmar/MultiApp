@@ -1,57 +1,17 @@
 <template>
-    <div class="container">
-        <ConfigurationScreen :gameConfigs="configs"></ConfigurationScreen>
-    </div>
+    <TicTacToe></TicTacToe>
 </template>
 
 <script>
-    import ConfigurationScreen from "@/components/Shared/ConfigurationScreen";
+    import TicTacToe from "@/components/TicTacToe/TicTacToe";
 
-    const configs = [
-        {
-            id: "gameSpeed",
-            title: "Game Speed",
-            defaultValue: "d",
-            options: [
-                {
-                    value: "b",
-                    text: "bb"
-                },
-                {
-                    value: "d",
-                    text: "dd"
-                }
-            ]
-        },
-        {
-            id: "snakeColor",
-            title: "Snake Color",
-            defaultValue: "dd",
-            options: [
-                {
-                    value: "bb",
-                    text: "bb"
-                },
-                {
-                    value: "dd",
-                    text: "dd"
-                }
-            ]
-        }
-    ];
     export default {
         name: "ViewTest",
-        components: {ConfigurationScreen},
+        components: {TicTacToe},
         data() {
-            return {
-                configs
-            };
+            return {};
         }
     };
 </script>
 
-<style scoped>
-    .container {
-        background-color: white;
-    }
-</style>
+<style scoped></style>

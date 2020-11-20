@@ -18,6 +18,11 @@ const appsList = [
         path: "MazeGame",
         iconName: "Maze",
         tooltip: "Check what is the fastest route from point A to point B"
+    },
+    {
+        path: "TicTacToe",
+        iconName: "TicTacToe",
+        tooltip: "Play Tic Tac Toe"
     }
 ];
 export default appsList;
