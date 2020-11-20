@@ -360,9 +360,6 @@
             <polygon class="order-asc" points="3,0 6,4 0,4 " />
             <polygon class="order-des" fill="currentColor" points="3.1,10 0,6 6,6 " />
         </symbol>
-        <symbol viewBox="0 0 32 32" id="Add">
-            <path d="M17 15h5v2h-5v5h-2v-5h-5v-2h5v-5h2v5z" />
-        </symbol>
         <symbol viewBox="0 0 16 16" id="Record">
             <path
                 xmlns="http://www.w3.org/2000/svg"
