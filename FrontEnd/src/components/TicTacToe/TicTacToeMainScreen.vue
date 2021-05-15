@@ -16,21 +16,21 @@
     import ConfigurationScreen from "@/components/Shared/ConfigurationScreen";
     import TicTacToe from "@/components/TicTacToe/TicTacToe";
     const defaultConfig = {
-        players: "two"
+        gameMode: "Single Player"
     };
     const options = [
         {
-            id: "players",
+            id: "gameMode",
             title: "Players",
-            defaultValue: "one",
+            defaultValue: "single",
             options: [
                 {
-                    value: "one",
-                    text: "One Player"
+                    value: "single",
+                    text: "Single Player"
                 },
                 {
-                    value: "two",
-                    text: "Two Player"
+                    value: "multi",
+                    text: "Multi Player"
                 }
             ]
         }
