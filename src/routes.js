@@ -4,7 +4,7 @@ import MemoryBoard from "@/components/MemoryGame/MemoryBoard";
 import Gallery from "@/components/IconsGallery/Gallery";
 import SnakeGameMainScreen from "@/components/SnakeGame/SnakeGameMainScreen";
 import MazeBoard from "@/components/Maze/MazeBoard";
-import ViewTest from "@/components/_ViewTest/ViewTest";
+import ViewTest from "@/components/_ViewDebug/ViewDebug";
 import TicTacToeMainScreen from "@/components/TicTacToe/TicTacToeMainScreen";
 const routes = [
     {path: "/", component: Home},
