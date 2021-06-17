@@ -44,6 +44,6 @@
         "bracketSpacing": false,
         "arrowParens": "avoid",
         "vueIndentScriptAndStyle": true,
-        "endOfLine": "lf"
+        "endOfLine": "auto"
     }
 }
