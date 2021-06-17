@@ -1,4 +1,4 @@
-# noebook
+# MultiApp
 
 ## Project setup
 
