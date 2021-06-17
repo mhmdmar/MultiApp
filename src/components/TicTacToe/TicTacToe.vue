@@ -13,7 +13,7 @@
         </div>
         <button @click="resetBoard" class="reset-button">RESET</button>
         <div class="winner-name">
-            <span v-if="winner !== ''">{{ winner }}</span>
+            <span v-if="winner">{{ winner }}</span>
             <span v-else>Turn : {{ currentPlayer.name }}</span>
         </div>
     </div>
@@ -22,17 +22,12 @@
 <script>
     const PLAYER_NAME = {
         ONE: "Player 1",
-        TWO: "Player 2"
+        TWO: "Player 2",
+        COMPUTER: "Computer"
     };
-    const PLAYERS = {
-        one: {
-            mark: "X",
-            name: PLAYER_NAME.ONE
-        },
-        two: {
-            mark: "O",
-            name: PLAYER_NAME.TWO
-        }
+    const GAME_MODE = {
+        SINGLE_PLAYER: "single",
+        Multi_PLAYERS: "multi"
     };
     const GAME_STATE = {
         ACTIVE: 0,
@@ -46,27 +41,37 @@
                 type: Object,
                 default() {
                     return {
-                        players: "two"
+                        gameMode: GAME_MODE.SINGLE_PLAYER
                     };
                 }
             }
         },
         data() {
-            const players = this.gameConfig.players;
-            if (players === "one") {
-                PLAYER_NAME.TWO = "COMPUTER";
-                PLAYERS.two.name = "COMPUTER";
-            }
+            const gameMode = this.gameConfig.gameMode;
+            const player1 = {
+                name: PLAYER_NAME.ONE,
+                mark: "X"
+            };
+            const player2 = {
+                name:
+                    gameMode === GAME_MODE.SINGLE_PLAYER
+                        ? PLAYER_NAME.COMPUTER
+                        : PLAYER_NAME.TWO,
+                mark: "O"
+            };
+
             return {
-                blocks: this.getResetBlock(),
+                blocks: this.getFreshBlocks(),
                 gameState: GAME_STATE.ACTIVE,
-                turn: PLAYER_NAME.ONE,
-                winner: "",
-                players
+                turn: player1,
+                player1,
+                player2,
+                winner: null,
+                gameMode
             };
         },
         methods: {
-            getResetBlock() {
+            getFreshBlocks() {
                 const blocks = [];
                 for (let i = 0; i <= 8; i++) {
                     blocks.push({
@@ -78,39 +83,89 @@
             },
             blockClicked(block) {
                 if (this.gameState === GAME_STATE.ACTIVE) {
-                    if (block.occupied) {
-                        return;
+                    if (!block.occupied) {
+                        this.selectBlock(block);
                     }
-                    block.occupied = true;
-                    this.drawBlock(block, this.currentPlayer.mark);
-                    this.nextTurn();
                 }
             },
-            drawBlock(block, mark) {
+            selectBlock(block) {
+                block.occupied = true;
+                this.drawMarkOnBlock(block, this.currentPlayer.mark);
+                this.nextTurn();
+            },
+            drawMarkOnBlock(block, mark) {
                 block.mark = mark;
             },
-            nextTurn() {
-                let winner = this.checkWinner();
-                if (winner !== "") {
-                    if (winner === "DRAW") {
-                        this.draw();
-                    } else {
-                        this.win();
-                    }
-                } else {
+            async nextTurn() {
+                const gameEnded = this.validateGameEnded();
+                if (!gameEnded) {
                     this.switchPlayerTurn();
-                    if (this.players === "one") {
-                        this.gameState = GAME_STATE.PAUSED;
-                        this.computerMove();
+                    if (this.gameMode === GAME_MODE.SINGLE_PLAYER) {
+                        if (this.currentPlayer === this.player2) {
+                            this.gameState = GAME_STATE.PAUSED;
+                            await this.computerMove();
+                            this.gameState = GAME_STATE.ACTIVE;
+                        }
                     }
                 }
             },
             computerMove() {
-                setTimeout(() => {
-                    console.log("I don't know how to play yet");
-                    this.gameState = GAME_STATE.ACTIVE;
-                    this.switchPlayerTurn();
-                }, 2000);
+                return new Promise(resolve => {
+                    const block = this.getNextMoveBlock();
+                    this.selectBlock(block);
+                    resolve();
+                });
+            },
+            getNextMoveBlock() {
+                const gameEndingBlock = this.getGameEndingBlock();
+                if (gameEndingBlock !== null) {
+                    return gameEndingBlock;
+                }
+                // random option
+                const availableBlocks = this.blocks.filter(
+                    block => block.occupied === false
+                );
+                const len = availableBlocks.length;
+                const randomIndex = Math.floor(Math.random() * len);
+                return availableBlocks[randomIndex];
+            },
+            getEndGameLine() {},
+            getGameEndingBlockFromLine(first, second, third) {
+                if (
+                    this.blocks[first].mark !== undefined &&
+                    this.blocks[first].mark === this.blocks[second].mark &&
+                    !this.blocks[third].occupied
+                ) {
+                    return this.blocks[third];
+                }
+                if (
+                    this.blocks[first].mark !== undefined &&
+                    this.blocks[first].mark === this.blocks[third].mark &&
+                    !this.blocks[second].occupied
+                ) {
+                    return this.blocks[second];
+                }
+                if (
+                    this.blocks[second].mark !== undefined &&
+                    this.blocks[second].mark === this.blocks[third].mark &&
+                    !this.blocks[first].occupied
+                ) {
+                    return this.blocks[first];
+                }
+                return null;
+            },
+            getGameEndingBlock() {
+                return (
+                    this.getGameEndingBlockFromLine(0, 1, 2) ||
+                    this.getGameEndingBlockFromLine(3, 4, 5) ||
+                    this.getGameEndingBlockFromLine(6, 7, 8) ||
+                    this.getGameEndingBlockFromLine(0, 3, 6) ||
+                    this.getGameEndingBlockFromLine(1, 4, 7) ||
+                    this.getGameEndingBlockFromLine(2, 5, 8) ||
+                    this.getGameEndingBlockFromLine(0, 4, 8) ||
+                    this.getGameEndingBlockFromLine(2, 4, 6) ||
+                    null
+                );
             },
             draw() {
                 this.gameState = GAME_STATE.OVER;
@@ -121,20 +176,21 @@
                 this.winner = this.currentPlayer.name + " win!";
             },
             switchPlayerTurn() {
-                if (this.turn === PLAYER_NAME.ONE) {
-                    this.turn = PLAYER_NAME.TWO;
+                if (this.turn === this.player1) {
+                    this.turn = this.player2;
                 } else {
-                    this.turn = PLAYER_NAME.ONE;
+                    this.turn = this.player1;
                 }
             },
             resetBoard() {
                 this.gameState = GAME_STATE.ACTIVE;
-                this.winner = "";
-                this.blocks = this.getResetBlock();
+                this.winner = null;
+                this.blocks = this.getFreshBlocks();
+                this.turn = this.player1;
             },
-            checkWinner() {
+            getWinner() {
                 let i;
-                let winnerMark = "";
+                let winnerMark = null;
                 for (i = 0; i < 9; i += 3) {
                     if (this.checkLines(i, i + 1, i + 2)) {
                         winnerMark = this.blocks[i].mark;
@@ -151,17 +207,29 @@
                 if (this.checkLines(2, 4, 6)) {
                     winnerMark = this.blocks[i].mark;
                 }
-                if (winnerMark !== "") {
-                    return PLAYERS.one.mark === winnerMark
-                        ? PLAYERS.one.name
-                        : PLAYERS.two.name;
+                if (winnerMark) {
+                    return this.player1.mark === winnerMark
+                        ? this.player1.name
+                        : this.player2.name;
                 } else {
                     if (this.blocks.some(block => block.mark === undefined)) {
-                        return "";
+                        return null;
                     } else {
                         return "DRAW";
                     }
                 }
+            },
+            validateGameEnded() {
+                const winner = this.getWinner();
+                if (winner) {
+                    if (winner === "DRAW") {
+                        this.draw();
+                    } else {
+                        this.win();
+                    }
+                    return true;
+                }
+                return false;
             },
             checkLines(block1, block2, block3) {
                 if (
@@ -179,13 +247,7 @@
         },
         computed: {
             currentPlayer() {
-                let player;
-                if (this.turn === PLAYER_NAME.ONE) {
-                    player = PLAYERS.one;
-                } else {
-                    player = PLAYERS.two;
-                }
-                return player;
+                return this.turn === this.player1 ? this.player1 : this.player2;
             }
         }
     };
@@ -246,6 +308,7 @@
 
     .win {
         background: #0ff30f;
+
         &:hover {
             background: #0ff30f;
         }
@@ -260,11 +323,13 @@
         font-weight: bold;
         background: none;
         transition: all 0.2s ease-in-out;
+
         &:hover {
             cursor: pointer;
             color: green;
         }
     }
+
     .winner-name {
         height: 30px;
         width: 250px;

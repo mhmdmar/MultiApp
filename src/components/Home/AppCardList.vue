@@ -1,7 +1,11 @@
 <template>
     <div class="app-card-list-container">
         <div v-for="(app, i) in appsList" :key="i">
-            <AppCard class="app-card" :appPath="app.path" :iconName="app.iconName"></AppCard>
+            <AppCard
+                class="app-card"
+                :appPath="app.path"
+                :iconName="app.iconName"
+            ></AppCard>
         </div>
     </div>
 </template>
