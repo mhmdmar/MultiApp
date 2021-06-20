@@ -117,9 +117,13 @@
                 });
             },
             getNextMoveBlock() {
-                const gameEndingBlock = this.getGameEndingBlock();
-                if (gameEndingBlock !== null) {
-                    return gameEndingBlock;
+                const gameWiningBlock = this.getGameEndingBlock(this.player2.mark);
+                if (gameWiningBlock !== null) {
+                    return gameWiningBlock;
+                }
+                const gameLoosingBlock = this.getGameEndingBlock(this.player1.mark);
+                if (gameLoosingBlock !== null) {
+                    return gameLoosingBlock;
                 }
                 // random option
                 const availableBlocks = this.blocks.filter(
@@ -129,41 +133,55 @@
                 const randomIndex = Math.floor(Math.random() * len);
                 return availableBlocks[randomIndex];
             },
-            getEndGameLine() {},
-            getGameEndingBlockFromLine(first, second, third) {
+            getGameEndingBlockFromLine(firstIndex, secondIndex, thirdIndex, mark) {
+                // search for 2 blocks with the same mark in the line represented by the indexes in the arguments
                 if (
-                    this.blocks[first].mark !== undefined &&
-                    this.blocks[first].mark === this.blocks[second].mark &&
-                    !this.blocks[third].occupied
+                    this.blocks[firstIndex].mark === mark &&
+                    this.blocks[firstIndex].mark === this.blocks[secondIndex].mark &&
+                    !this.blocks[thirdIndex].occupied
                 ) {
-                    return this.blocks[third];
+                    return this.blocks[thirdIndex];
                 }
                 if (
-                    this.blocks[first].mark !== undefined &&
-                    this.blocks[first].mark === this.blocks[third].mark &&
-                    !this.blocks[second].occupied
+                    this.blocks[firstIndex].mark === mark &&
+                    this.blocks[firstIndex].mark === this.blocks[thirdIndex].mark &&
+                    !this.blocks[secondIndex].occupied
                 ) {
-                    return this.blocks[second];
+                    return this.blocks[secondIndex];
                 }
                 if (
-                    this.blocks[second].mark !== undefined &&
-                    this.blocks[second].mark === this.blocks[third].mark &&
-                    !this.blocks[first].occupied
+                    this.blocks[secondIndex].mark === mark &&
+                    this.blocks[secondIndex].mark === this.blocks[thirdIndex].mark &&
+                    !this.blocks[firstIndex].occupied
                 ) {
-                    return this.blocks[first];
+                    return this.blocks[firstIndex];
                 }
                 return null;
             },
             getGameEndingBlock() {
+                const gameWiningBlock = this.getGameEndingBlockByMark(this.player2.mark);
+                if (gameWiningBlock !== null) {
+                    return gameWiningBlock;
+                }
+                const gameLoosingBlock = this.getGameEndingBlockByMark(this.player1.mark);
+                if (gameLoosingBlock !== null) {
+                    return gameLoosingBlock;
+                }
+                return null;
+            },
+            getGameEndingBlockByMark(mark) {
                 return (
-                    this.getGameEndingBlockFromLine(0, 1, 2) ||
-                    this.getGameEndingBlockFromLine(3, 4, 5) ||
-                    this.getGameEndingBlockFromLine(6, 7, 8) ||
-                    this.getGameEndingBlockFromLine(0, 3, 6) ||
-                    this.getGameEndingBlockFromLine(1, 4, 7) ||
-                    this.getGameEndingBlockFromLine(2, 5, 8) ||
-                    this.getGameEndingBlockFromLine(0, 4, 8) ||
-                    this.getGameEndingBlockFromLine(2, 4, 6) ||
+                    // by rows
+                    this.getGameEndingBlockFromLine(0, 1, 2, mark) ||
+                    this.getGameEndingBlockFromLine(3, 4, 5, mark) ||
+                    this.getGameEndingBlockFromLine(6, 7, 8, mark) ||
+                    // by columns
+                    this.getGameEndingBlockFromLine(0, 3, 6, mark) ||
+                    this.getGameEndingBlockFromLine(1, 4, 7, mark) ||
+                    this.getGameEndingBlockFromLine(2, 5, 8, mark) ||
+                    // diagonally
+                    this.getGameEndingBlockFromLine(0, 4, 8, mark) ||
+                    this.getGameEndingBlockFromLine(2, 4, 6, mark) ||
                     null
                 );
             },
