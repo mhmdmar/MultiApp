@@ -31,16 +31,10 @@
     import keyboardKeys from "@/utils/keyboardKeys.json";
 
     import {v4 as uniqueId} from "uuid";
-    import DataService from "@/services/DataService";
     import StorageService from "@/services/StorageService";
 
-    let mockService = process.env.NODE_ENV !== "production";
-    let storage;
-    if (mockService) {
-        storage = StorageService;
-    } else {
-        storage = new DataService();
-    }
+    let storage = StorageService;
+
     export default {
         name: "NoteBook",
         components: {Note, TopToolbar},
@@ -104,7 +98,8 @@
             },
             updateTimeStamp() {
                 let unchangedNotes = JSON.parse(this.unchangedNotes);
-                for (let i = 0; i < this.notes.length; i++) {
+                const notesLen = unchangedNotes?.length || 0;
+                for (let i = 0, len = this.notes.length; i < len && i < notesLen; i++) {
                     let curNote = this.notes[i];
                     let curUnchangedNote = unchangedNotes[i];
                     if (
