@@ -8,7 +8,7 @@
         </div>
         <div class="container" :class="{short: !this.description}">
             <div class="container-body">
-                <div class="component-title" @click="copyCode(code)">
+                <div class="component-title">
                     <h4>
                         <b>{{ title }}</b>
                     </h4>
@@ -27,20 +27,7 @@
                 copied: false
             };
         },
-        methods: {
-            copyCode(code) {
-                navigator.clipboard.writeText(code);
-                console.log("code copied!");
-                this.copied = true;
-                const _this = this;
-                window.setTimeout(function() {
-                    _this.copied = false;
-                    console.log("_this.copied", _this.copied);
-                }, 2000);
-
-                // navigator.clipboard.readText().then(text => outputElem.innerText = text);
-            }
-        }
+        methods: {}
     };
 </script>
 

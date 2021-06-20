@@ -104,7 +104,11 @@
                         if (this.currentPlayer === this.player2) {
                             this.gameState = GAME_STATE.PAUSED;
                             await this.computerMove();
-                            this.gameState = GAME_STATE.ACTIVE;
+                            if (this.validateGameEnded()) {
+                                this.gameState = GAME_STATE.OVER;
+                            } else {
+                                this.gameState = GAME_STATE.ACTIVE;
+                            }
                         }
                     }
                 }
