@@ -1,6 +1,9 @@
 <template>
     <div>
         <SvgSprite />
+        <div class="top-bar">
+            <router-link to="/">Home Page</router-link>
+        </div>
         <router-view></router-view>
     </div>
 </template>
@@ -48,5 +51,8 @@
     }
     div[tabindex="0"]:focus {
         outline: none;
+    }
+    .top-bar {
+        margin-bottom: 10px;
     }
 </style>
