@@ -125,6 +125,11 @@
                 if (gameLoosingBlock !== null) {
                     return gameLoosingBlock;
                 }
+
+                const middleBlock = this.blocks[4];
+                if (!middleBlock.occupied) {
+                    return middleBlock;
+                }
                 // random option
                 const availableBlocks = this.blocks.filter(
                     block => block.occupied === false
