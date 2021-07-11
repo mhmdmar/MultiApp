@@ -9,6 +9,7 @@
         }"
     >
         <div id="score" class="title-container">{{ score }}</div>
+        <div> press "escape" to get back to main menu</div>
         <canvas id="snakeBoard" ref="snakeBoard" height="400px" width="400px"></canvas>
     </div>
 </template>

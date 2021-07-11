@@ -75,4 +75,7 @@
         color: white;
         text-align: center;
     }
+    .start-btn {
+        @apply border w-1 text-blue-500;
+    }
 </style>

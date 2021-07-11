@@ -1,5 +1,5 @@
 <template>
-    <div class="app-list-container">
+    <div class="flex h-screen">
         <AppCardList :appsList="appsList"></AppCardList>
     </div>
 </template>
@@ -18,11 +18,4 @@
     };
 </script>
 
-<style scoped>
-    .app-list-container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-</style>
+<style scoped></style>

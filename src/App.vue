@@ -1,8 +1,10 @@
 <template>
-    <div>
+    <div class="h-screen md:overflow-hidden">
         <SvgSprite />
         <div class="top-bar">
-            <router-link to="/">Home Page</router-link>
+            <router-link class="no-underline hover:underline text-blue-500" to="/"
+                >Home Page</router-link
+            >
         </div>
         <router-view></router-view>
     </div>

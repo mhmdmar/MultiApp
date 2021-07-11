@@ -41,9 +41,12 @@
 
 <style scoped lang="scss">
     .card-container {
+        @apply h-full w-full outline-none;
         user-select: none;
+        -webkit-tap-highlight-color: transparent;
     }
     .scene {
+        @apply outline-none;
         width: 100px;
         height: 150px;
         border: 1px solid #ccc;
@@ -52,8 +55,7 @@
     }
 
     .card {
-        width: 100%;
-        height: 100%;
+        @apply h-full w-full outline-none;
         transition: transform 1s;
         transform-style: preserve-3d;
         cursor: pointer;

@@ -27,12 +27,6 @@
 </script>
 
 <style scoped lang="scss">
-    .app-card-container {
-        &:hover {
-            background-color: wheat;
-            border-bottom-color: black;
-        }
-    }
     .app-card-icon {
         padding: 7px 12px;
         height: 80px;
