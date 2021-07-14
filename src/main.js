@@ -3,6 +3,7 @@ import App from "./App.vue";
 import store from "./store";
 import VueRouter from "vue-router";
 import routes from "./routes";
+import "./assets/tailwind.css";
 
 const router = new VueRouter({
     mode: "history",

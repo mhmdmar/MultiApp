@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="counter-container">
-            <span>Number of tries {{ this.clicksCounter }}</span>
+            <span>Number of clicks {{ this.clicksCounter }}</span>
             <div title="start again">
                 <SvgIcon class="reset-icon" icon="Dragging" @click="resetGame"></SvgIcon>
             </div>
@@ -9,7 +9,6 @@
         <div class="memory-card-container">
             <div v-for="(card, i) in cards" :key="i">
                 <MemoryCard
-                    class="memory-card"
                     :iconName="card.iconName"
                     :isRevealed="card.isRevealed"
                     @click="cardClick(card, i)"
@@ -124,22 +123,12 @@
 
 <style scoped>
     .memory-card-container {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-    .memory-card {
-        justify-content: space-evenly;
-        margin: 15px;
+        @apply w-full h-full grid grid-cols-3 md:grid-cols-8 m-6 md:m-12 md:mt-1 gap-y-4 md:gap-x-16 overflow-auto;
     }
     .counter-container {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
+        @apply flex justify-center flex-wrap items-center;
     }
     .reset-icon {
-        margin-right: 15px;
-        margin-left: 15px;
-        margin-top: 1px;
+        @apply ml-3;
     }
 </style>
