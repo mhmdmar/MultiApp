@@ -47,6 +47,7 @@
 
 <style scoped lang="scss">
     .search-container {
+        width: 200px;
         display: flex;
         align-items: baseline;
         border-bottom: 1px solid #ffffff;
@@ -55,6 +56,7 @@
     }
     .search {
         border-bottom-color: #0079ef;
+        color: black;
         height: 32px;
         width: 100%;
         line-height: 16px;
