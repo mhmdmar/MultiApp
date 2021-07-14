@@ -8,20 +8,20 @@
         }"
     >
         <div class="top-toolbar">
-            <div class="top-note-toolbar-buttons" v-if="!editMode">
-                <div class="left-toolbar-icon">
-                    <SvgIcon icon="Edit" @click="editNote"></SvgIcon>
-                    <SvgIcon
-                        icon="Refresh"
-                        :disabled="resetNoteDisabled"
-                        @click="resetNote"
-                    >
-                    </SvgIcon>
-                </div>
-                <div class="flex-right-side">
-                    <SvgIcon icon="Delete" @click="deleteNoteClicked"></SvgIcon>
-                </div>
-            </div>
+            <Toolbar
+                v-if="!editMode"
+                class="top-note-toolbar-buttons"
+                :leftIcons="[
+                    {name: 'Edit', callback: editNote},
+                    {name: 'Refresh', callback: resetNote, disabled: resetNoteDisabled}
+                ]"
+                :rightIcons="[
+                    {
+                        name: 'Delete',
+                        callback: deleteNoteClicked
+                    }
+                ]"
+            ></Toolbar>
             <div v-else>
                 <SvgIcon icon="ArrowLeft" @click="finishEditNote"></SvgIcon>
             </div>
@@ -58,13 +58,14 @@
     import {mapGetters, mapMutations} from "vuex";
     import keyboardShortcut from "@/directives/keyboardShortcut";
     import keyboardKeys from "@/utils/keyboardKeys.json";
+    import Toolbar from "@/components/Toolbar";
     export default {
         name: "Note",
         props: ["note"],
         directives: {
             keyboardShortcut
         },
-        components: {SvgIcon},
+        components: {Toolbar, SvgIcon},
         data() {
             return {
                 visible: true,
@@ -171,18 +172,13 @@
 
 <style lang="scss" scoped>
     .note-container {
-        padding: 5px;
-        display: inline-flex;
-        overflow: hidden;
-        flex-direction: column;
-        width: 250px;
+        @apply inline-flex p-2 overflow-hidden flex-col;
         background-color: #ffffff;
         margin-left: 8px;
         margin-right: 8px;
         box-sizing: border-box;
         box-shadow: 2px 2px rgba(0, 0, 0, 0.15);
         margin-top: 16px;
-        min-width: 250px;
     }
 
     .top-note-toolbar-buttons {
@@ -204,13 +200,14 @@
             margin-left: auto;
         }
     }
-
-    .text-label,
+    .text-label {
+        margin-top: 5px;
+        width: 100%;
+        height: 90%;
+    }
     .note-text-area {
         width: 100%;
         height: 100%;
-    }
-    .note-text-area {
         resize: none;
         padding: 7px 0;
         line-height: 16px;
@@ -259,17 +256,9 @@
         margin: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 90%;
     }
     .error-icon {
         margin: 0 10px;
-    }
-    .left-toolbar-icon {
-        display: flex;
-        flex-grow: 0.1;
-        justify-content: space-between;
-    }
-    .top-toolbar {
-        padding: 2px 8px;
     }
 </style>

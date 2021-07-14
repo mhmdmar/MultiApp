@@ -3,34 +3,34 @@
         <div class="title">
             <span id="appName">Notebook</span>
         </div>
-        <div class="toolbar-container" :class="{'disabled-toolbar': isEditMode}">
-            <SvgIcon
-                class="top-toolbar-icon"
-                icon="Add"
-                :disabled="isEditMode"
-                @click="addNote"
-            ></SvgIcon>
-            <SvgIcon
-                class="top-toolbar-icon"
-                icon="Export"
-                :disabled="isEditMode || !isBoardDirty"
-                @click="saveNotes"
-            ></SvgIcon>
-            <SvgIcon
-                class="top-toolbar-icon"
-                icon="Refresh"
-                :disabled="isEditMode || !isBoardDirty"
-                @click="resetNotes"
-            ></SvgIcon>
-            <Search class="search-bar" :disabled="isEditMode"></Search>
-        </div>
+        <Toolbar
+            class="bg-white"
+            :leftIcons="[
+                {name: 'Add', callback: addNote, disabled: isEditMode},
+                {
+                    name: 'Export',
+                    callback: saveNotes,
+                    disabled: isEditMode || !isBoardDirty
+                },
+                {
+                    name: 'Refresh',
+                    callback: resetNotes,
+                    disabled: isEditMode || !isBoardDirty
+                }
+            ]"
+            :rightIcons="[
+                {
+                    type: 'search',
+                    disabled: isEditMode
+                }
+            ]"
+        ></Toolbar>
     </div>
 </template>
 
 <script>
-    import SvgIcon from "@/components/Shared/SvgIcon";
-    import Search from "@/components/Board/Search";
     import {mapGetters} from "vuex";
+    import Toolbar from "@/components/Toolbar";
 
     export default {
         name: "TopToolbar",
@@ -40,7 +40,7 @@
                 default: false
             }
         },
-        components: {Search, SvgIcon},
+        components: {Toolbar},
         computed: {
             ...mapGetters(["searchText", "isEditMode"])
         },

@@ -12,7 +12,7 @@
             @resetNotesClicked="resetNotes"
             :isBoardDirty="isBoardDirty"
         ></TopToolbar>
-        <div>
+        <div class="grid grid-cols-1 md:grid-cols-3 m-3 md:m-6 gap-y-4">
             <Note
                 v-for="note in notes"
                 :key="note.id"
